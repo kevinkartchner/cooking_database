@@ -1,0 +1,88 @@
+CREATE DATABASE cooking;
+
+USE cooking;
+
+CREATE TABLE User
+(
+  UserID SERIAL,
+  username VARCHAR (255) NOT NULL,
+  UserEmail VARCHAR (255) NOT NULL,
+  FirstName VARCHAR (255) NOT NULL,
+  LastName VARCHAR (255) NOT NULL,
+  PasswordHash VARCHAR (255) NOT NULL,
+  DateJoined DATE NOT NULL,
+  PRIMARY KEY (UserID),
+  UNIQUE (username),
+  UNIQUE (UserEmail)
+);
+
+CREATE TABLE Recipe
+(
+  RecipeName VARCHAR (255) NOT NULL,
+  RecipeID SERIAL,
+  DateCreated DATE NOT NULL,
+  Image BLOB,
+  Derscription VARCHAR (3000) NOT NULL,
+  Instructions VARCHAR (3000) NOT NULL,
+  UserID BIGINT UNSIGNED,
+  PRIMARY KEY (RecipeID),
+  FOREIGN KEY (UserID) REFERENCES User(UserID) 
+);
+
+CREATE TABLE LoginSession
+(
+  SessionID VARCHAR (255) NOT NULL,
+  Date_Time VARCHAR (255) NOT NULL,
+  Cookie VARCHAR (255) NOT NULL,
+  Active BOOLEAN NOT NULL,
+  UserID BIGINT UNSIGNED,
+  PRIMARY KEY (SessionID),
+  FOREIGN KEY (UserID) REFERENCES User(UserID),
+  UNIQUE (Cookie)
+);
+
+CREATE TABLE LoginAttempt
+(
+  LoginID VARCHAR (255) NOT NULL,
+  UserExists BOOLEAN NOT NULL,
+  Date_Time VARCHAR (255) NOT NULL,
+  AttemptNum INT NOT NULL,
+  RemoteIP VARCHAR (255) NOT NULL,
+  UserID BIGINT UNSIGNED,
+  PRIMARY KEY (LoginID),
+  FOREIGN KEY (UserID) REFERENCES User(UserID)
+);
+
+CREATE TABLE Ingredient
+(
+  IngredientName_ VARCHAR (255) NOT NULL,
+  IngredientID_ SERIAL,
+  PRIMARY KEY (IngredientID_)
+);
+
+CREATE TABLE RecipeIngredient
+(
+  Quantity VARCHAR (255) NOT NULL,
+  RecipeID BIGINT UNSIGNED,
+  IngredientID_ BIGINT UNSIGNED,
+  FOREIGN KEY (RecipeID) REFERENCES Recipe(RecipeID),
+  FOREIGN KEY (IngredientID_) REFERENCES Ingredient(IngredientID_)
+);
+
+CREATE TABLE PersonalCookbook
+(
+  UserID BIGINT UNSIGNED,
+  RecipeID BIGINT UNSIGNED,
+  PRIMARY KEY (UserID, RecipeID),
+  FOREIGN KEY (UserID) REFERENCES User(UserID),
+  FOREIGN KEY (RecipeID) REFERENCES Recipe(RecipeID)
+);
+
+CREATE TABLE WantsToTry
+(
+  UserID BIGINT UNSIGNED,
+  RecipeID BIGINT UNSIGNED,
+  PRIMARY KEY (UserID, RecipeID),
+  FOREIGN KEY (UserID) REFERENCES User(UserID),
+  FOREIGN KEY (RecipeID) REFERENCES Recipe(RecipeID)
+);
